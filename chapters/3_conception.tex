@@ -1,0 +1,79 @@
+\section{Téchnologies et outils utilisés}
+
+\subsection{React}
+La bibliothèque JavaScript libre développée par Facebook et une communauté de développeur indépendant. Le but principal de React est de faciliter la création de composants pour les interfaces utilisateur. Ces composants dépendent d'un état et lorsque celui-ci change, une nouvelle page HTML est générée.
+En plus d'avoir eu le cours de TWEB lors du premier semèstre de troisième année, certains de nos membres avaient déjà de l'expérience et de la facilité avec cette bibliothèque.
+
+\subsection{Scala}
+Conçu à l'École polytechnique fédérale de Lausanne (EPFL), Scala est un langage de programmation multi-paradigme, il combine la programmation orientée objet et la programmation fonctionnelle. Son but est d'exprimer les modèles de programmation courants dans une forme concise et élégante. 
+
+\subsection{Scala-Play}
+Basé sur Akka, Play est un framework web open source qui permet de rapidement et facilement créer des applications web basée sur Java. La particularité de Play est de ne pas être basé sur le moteur Java, ce qui en fait un moteur plus simple et plus puissant lors d'une application web. Depuis la version 2.0, le framework a subit une refonte et a été écrit en Scala, le build et le déploiement ont été migré sur du SBT.
+
+\subsection{Slick (database)}
+Scala Language-Integrated Connection Kit est une librairie de type Functional Relational Mapping (FRM) qui permet de facilement accéder à une base de données avec du Scala. Cette librairie permet de traiter les données comme s'il s'agissait d'une collections Scala tout en laissant aux développeurs, un contrôle sur les accès à la base de données. Les données sont traitées de manière asynchrone ce qui permet de facilement l'intégrer dans un projet Scala-Play. L'un des avantages principal de Slick est qu'il est Typesafe et permet donc un traitement correcte des données selon le modèle. 
+
+\subsection{MySQL}
+Le système de gestion de bases de données relationnelles (SGDBR), faisant partie des logiciels de gestion des bases de données les plus utilisés au monde et que l?entièreté de notre équipe connaît avec suffisamment de détails pour être facilement utilisé dans un projet de cette envergure. De plus, il est recommandé de l'utiliser dans un projet utilisant Slick.
+
+\subsection{Docker}
+Le logiciel libre qui automatise le déploiement d?application dans des conteneurs logiciels. Ces conteneurs sont isolés et peuvent être exécutés sur n?importe quel système qui prend en charges Docker.
+Principalement utilisé lors de la phase de développement, il permet de créer un conteneur MySQL qui sera le même pour chaque membre du groupe et ce facilement.
+
+\subsection{Git}
+Le gestionnaire de version décentralisé libre, que l'on a choisi d'utiliser afin de gérer la totalité du projet ainsi que ses différentes versions.
+
+Nous avons créé utilisés des branches afin d'implémenter les nouvelles fonctionnalités une fois celle-ci prête elles sont envoyée dans une copie temporaire de la branche Master afin de s'assurer du bon fonctionnement du projet. Une fois les modifications acceptées, celle-ci sont envoyée sur la branche Master.
+
+\subsection{GitHub}
+Le service web permettant de parcourir graphiquement l'historique Git du client et du serveur et qui nous a également permis d'héberger nos sources en ligne.
+GitHub offre également de nombreux outils de gestion de projet qui sont intéressantes lorsque l'on doit travailler en équipe. 
+
+
+\newpage
+
+\section{Architecture du client}
+Nous avons choisi d'utiliser React pour le client, de par nos expériences personnelle avec la librairie. React, l'oblige, le projet client est structuré en composant.
+
+\paragraph{Un répertoire page} qui contient les composants des pages de \textbf{Login}, \textbf{Register}, \textbf{Home}, \textbf{Analyse}, et le \textbf{Header}.
+
+\paragraph{Un répertoire Components} qui contient les \textbf{Canvas} utilisant la librairie permettant de créer des graphes, le composant \textbf{Graph}, qui contiendra le Canvas. et pour finir le composant \textbf{Post} qui lui contient les rapport d'analyse.
+
+\paragraph{Un répertoire utils} qui contient un composant qui utilise le contexte de React pour partager des informations entre les composant comme nous l'avons appris lors du cours de TWEB. Pour ce qui est des requêtes Axios,elles sont contenues dans le fichier \textbf{user.service}.
+
+\paragraph{Le fichier App.js} le programme principal, s'occupe de rediriger l'utilisateur selon ses autorisations de la page courantes vers les pages désirées tout en faisant le lien parmi les différents composants vu ci-dessus.
+
+\newpage
+
+\section{Architecture du serveur}
+Pour ce qui est du serveur, nous avons gardé la structure de base du projet tel qu'il a été fournis par Miguel Santamaria en y intégrant nos fonctionnalités, à savoir, pour l'analyse de sentiments. 
+Plus précisément, nous retrouvons les éléments suivants :
+\begin{itemize}
+    \item \textbf{controllers} : Comme son nom l'indique, il contient les différents contrôleurs du projet.
+    \item \textbf{filters} : Contient les différents filtres qui peuvent être appliqué au données.
+    \item \textbf{models} : Tout simplement les modèles de données qui seront stocké dans la base de données que nous traiterons un peu plus loin.
+    \item \textbf{repositories} : Permet de faire le lient entre les données et la base de données.
+    \item \textbf{services} : Les différents services offerts par notre serveur, dont l'analyse de sentiments.
+    \item \textbf{views} : Les vues HTML, offertes par notre serveur.
+\end{itemize}
+
+\subsection{Définition de la base de données}
+
+\subsubsection{Schéma de la base de données}
+En nous basant sur les données fournies par l'API de Twitter, nous avons construits nos modèles en ciblant la simplicité et la clarté.
+
+lancer le projet dans MySQL workbench et générer des Schéma et les commenter un peu plus.
+
+
+\subsubsection{User}
+Cette table contient la liste des utilisateurs pouvant utiliser notre application. Chaque utilisateur est identifié par un email unique et possède un mot de passe ainsi qu'une date de création.
+
+\subsubsection{Tweet}
+Cette table contient la liste des Tweets qu'un utilisateur souhaite analyser, un utilisateur peut analyser un à plusieurs Tweets et chaque Tweets est analysé par un seul et unique utilisateur.
+Chaque Tweets est défini par un id unique et possède un auteur, le texte du Tweets, une date de création, une date d'analyse, et un ressentiment moyen. 
+
+\subsubsection{TweetResponse}
+Cette table contient la liste des réponses à un Tweets, leur texte sera utilisé dans l'analyse de sentiment. Un Tweets peut posséder entre une et plusieurs réponses et chaque réponses est lié à un et un seul Tweets.
+Tout comme les Tweets, les réponses possèdent un id, un auteur, un texte qui sera analysé, une date de création, une date d'analyse, et un ressentiment moyen.
+De la même manière qu'un Tweet peut intéresser une entreprise, les réponses aux Tweet d'autrui peuvent avoir un intérêt. 
+
