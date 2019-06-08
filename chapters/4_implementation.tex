@@ -1,12 +1,22 @@
 
 \section{Détails sur le client}
 
-Pour ce qui est du client, il s'agit d'une application web en React relativement la simple. Nous avons des postes contenant le résultat de notre analyse que l'utilisateur peut consulter comme dans l'exemple ci-dessous.
+Pour ce qui est du client, il s'agit d'une application web en React relativement la simple. Afin de permettre à l'utilisateur de rapidement avoir un aperçu des sentiments général de ses Tweets, nous avons mis une pastille de couleurs à coté des postes. Celle-ci varie entre les couleurs suivantes :
+
+\begin{itemize}
+  \item le rouge : les sentiments sont en général très négatif.
+  \item l'orange : les sentiments sont en général négatif.
+  \item le gris : les sentiments sont en général neutre.
+  \item le bleu : les sentiments sont en général positif.
+  \item le vert : les sentiments sont en général très positif.
+\end{itemize}
+
 
 \includegraphics[width=\textwidth]{TweetAnalyser}
 
 \newpage
-La seule particularité notable est que le serveur va lui fournir une valeur représentant un sentiment pour chaque Tweet analysé et celui-ci va calculer la moyenne et l'afficher dans un graphe à barre comme on peut le voir ci-dessous.
+
+En regardant les détails des poste, ceux-ci contiennent le résultat de notre analyse que l'utilisateur peut consulter comme dans l'exemple ci-dessous. À savoir que le serveur va fournir au client une valeur représentant un sentiment pour chaque Tweet analysé et celui-ci va ensuite calculer la moyenne et l'afficher dans un graphe à barre comme on peut le voir ci-dessous.
 
 \includegraphics[width=\textwidth]{StatisticInfo}
 

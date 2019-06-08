@@ -6,5 +6,11 @@ Comme nous l'avons déjà dit auparavant, nous avons eu beaucoup de soucis avec ce
 \paragraph{Garantie des résultats}
 Actuellement, il nous est impossible de garantir de pouvoir lister toutes les réponses d'un tweets. Ceci est lié aux limitations que l'on subit par l'API de Twitter. Nous avons essayé de faire en sorte de minimiser ce problème autant que possible.
 
-\paragraph{L'intégrité des données}
-Pour une raison que nous n'avons pas encore réussi à trouver, nous nous sommes rendu compte qu'il était possible, et ce relativement facilement, de supprimer une analyse de Tweet depuis postman par exemple n'ayant pas le bon token ou, pire encore, sans avoir besoin d'utiliser un token d'authentification. Il semblerait qu'une condition est ignorée ou pas prise en compte, ceci peut s'expliquer par une mauvaise gestion de la concurrence, une étape du processus de vérification qui a été oubliée ou mal exécutée, si l'on avait plus de temps pour le projet, ce problème serait le premier que l'on aurait essayé de résoudre.
+\paragraph{Un problème particulier}
+Nous avons un problème qui peut uniquement arriver en phase de développement et ne devrait pas se produire en production. Si un utilisateur se crée un compte et obtient son token et que juste après on détruise la base de données pour la régénérer, cet utilisateur peut quand même utiliser son token pour sauter l'étape d'authentification. À partir de la, de nombreux problème peuvent arriver si cet utilisateur essaie de faire des analyses. Le problème vient du fait que, au niveau du serveur, lorsque l'on décode le token pour vérifier son origine, on a oublié de vérifier si l'utilisateur existe bel et bien dans la base de données. Ce cas est tellement spécifique que nous ne nous en sommes rendu compte que très tard et n'avons pas pu le corriger à temps.
+
+\paragraph{Déconnexion en attente}
+Si, pendant qu'un utilisateur est connecté, on éteint le serveur pour une raison quelconque, l'utilisateur reste loggé même si l'on rafraîchi la page. Normalement, il aurait fallu que ce procédé soit automatique. C'est plus une gène qu'un réel problème.
+
+\paragraph{Clarté des messages}
+Lorsque le serveur traite une requête, actuellement, il ne renvoie pas de code de statut. Par conséquent, il n'est pas possible d'afficher de messages très précis en cas d'erreur.
