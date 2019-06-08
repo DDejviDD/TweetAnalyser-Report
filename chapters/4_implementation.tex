@@ -1,13 +1,112 @@
 
-Compléter selon les indications ci-dessous.
-Ajouter des bouts de code intéressant.
-Ajouter un schema d'execution
-Ajouter plus de détails sur l'implémentation
+\section{Détails sur le client}
+
+Pour ce qui est du client, il s'agit d'une application web en React relativement la simple. Nous avons des postes contenant le résultat de notre analyse que l'utilisateur peut consulter comme dans l'exemple ci-dessous.
+
+\includegraphics[width=\textwidth]{TweetAnalyser}
+
+\newpage
+La seule particularité notable est que le serveur va lui fournir une valeur représentant un sentiment pour chaque Tweet analysé et celui-ci va calculer la moyenne et l'afficher dans un graphe à barre comme on peut le voir ci-dessous.
+
+\includegraphics[width=\textwidth]{StatisticInfo}
+
+\newpage
+
+\section{Détails sur le serveur}
+La logique de notre projet se déroule du côté du serveur. En passant outre les modules dont le seul intérêt est la récupération des données, il nous reste les contrôleurs et les services qui ont demandé la majeur partie du travaille sur le serveur.
+
+\includegraphics[width=\textwidth]{endpoints}
+
+\subsection{Les contrôleurs}
+Les contrôleurs permettent de définir les actions que le serveur doit entreprendre lorsque une requêtes HTTP lui est transmise. Ici, nous avons séparé la gestions des utilisateurs de notre application, car seul les utilisateurs authentifié auprès du serveur doivent être capable de l'utiliser, et des Tweets.
+
+\subsubsection{Utilisateurs}
+Du côté des utilisateurs, nous avons mis en place deux routes utilisant le protocole GET.
+\paragraph{register} 
+Passant par l'endpoint \verb|/user/register|, l'utilisateurs peut se créer un compte et en échange il obtient un token JWT. À partir de ce moment, l'utilisateurs est capable d'analyser des Tweets et retrouver d'ancien résultat. 
+\paragraph{login}
+Passant par l'endpoint \verb|/user/login|, l'utilisateurs peut se connecter à son compte et en échange il obtient un token JWT. À partir de ce moment, l'utilisateurs est capable d'analyser des Tweets et retrouver d'ancien résultat. 
+
+\subsubsection{Tweets}
+Du côté des Tweets, nous avons bien plus de routes à disposition des utilisateurs. 
+\paragraph{Tweet} 
+Passant par l'endpoint \verb|/tweet|, cet endpoint va lancer l'analyse d'un Tweet choisi en passant par le services correspondant que nous verrons plus tard dans le rapport. Seul les utilisateurs authentifié ont accès à cette partie.
+
+\paragraph{Tweets} 
+Passant par l'endpoint \verb|/tweets|, cet endpoint permet de lister la totalité des tweets qu'un utilisateurs a, auparavant, analyser. Ceci lui permet ensuite de demander à revoir leurs résultats.
+
+\paragraph{Tweet responses} 
+Passant par l'endpoint \verb|/tweetResponses|, cet endpoint permets de lister la totalité des réponses à un Tweet qui a été analysé. Ceci peux, par exemple, permettre aux utilisateurs de voir ce qui s'est passé lorsque l'un de leurs Tweets obtient une très mauvaise évaluation ou au contraire un très bon retour.
+
+\paragraph{Tweet delete} 
+Passant par l'endpoint \verb|/tweet/delete|, comme son nom l'indique, il permet de supprimer un Tweet dont l'analyse n'est plus nécessaire.
 
 
+\subsection{Les services}
+Dans cette partie, nous verrons comment sont traité les requêtes faites auprès du serveur. Nous avons deux services qui valent la peine d'être expliqué, le premier qui va calculer le ressentiment génèral d'un Tweet et le second qui va faire le lien entre le premier et le contrôleurs.
 
-Indications :
+\paragraph{SentimentAnalyzer}
+En cherchant une manière de résoudre le problème de récupération des sentiments dans un texte, un problème relativement complexe même pour un linguiste expérimenté, nous avons fini par trouvé un bon nombre d'outils offert par Stanford CoreNLP. Stanford CoreNLP mets a disposition des outils permettant de traiter le language humain, à partir de simple mots, de discours, de la structure d'une phrase, et de l'ensemble syntaxique utilisé, cet outil permet d'extraire un sentiments, des citations et bien plus encore. Nous avons bien évidemment utilisé leur extracteur de sentiments dans le cadre de notre projet. Lire les sentiments humain à partir de 280 caractères n'est pas une chose aisée, il faut plutôt partir de l'idée que l'algorithme va donner une indications relativement exacte du vrai sentiments contenu dans un message.
 
-Dans le fichier TwitterClientService, peut être un truc interessant c'est la fonction getTweets qui utilise un accumulateur en recursif comme en a vu en cours. Mais en gros cette fonction récupère les 100 premières réponses, prend la valeur next pour chopper les 100 d'après anisi de suite jusqu'à que le compteur tombre à 0 ou qu'il y ai plus de tweet. On a utilisé une promess qui va attendre d'avoir tous résolu pour passé à la suite, je sais honnetement pas si c'est une bonne pratique mais je voyais d'autre alternatif
+
+\paragraph{TwitterClientService}
+Ce services va permettre de mettre en relation le message contenu dans un Tweet et les sentiments général qu'ils véhiculent. En règle génèral, lorsque l'utilisateurs demande d'analyser un compte Twitter, ce que nous faisons actuellement est de récupérer le dernier Tweet qui a été publié, les réponses à celui-ci et l'on utilise l'analyseur de sentiments de Stanford CoreNLP afin d'en ressortir la manière dont il a été perçu et les réaction qu'il a déclenché.
+Parmi les fonction intéressante, nous avons \textbf{getTweets} qui permet de récupérer les Tweets paginé depuis l'API de Twitter. Plus concrètement, cette fonction récupère les 100 premières réponses, puis en utilisant la valeur \textbf{next} obtiendra les 100 suivant et ainsi de suite jusqu'à que soit le compteur tombe à 0, ou qu'il y ai plus de Tweets à récolter. Le tout utilisant une fonction récursive-terminale qui comme nous l'avons vu en cours sont les meilleures et les plus optimisée lorsqu'il s'agit de traiter un grand nombre de données. Finalement, nous avons mis en place une promesse qui va nous permettre d'attendre l'obtention des résultats avant de passer à la suite.
+
+\newpage
+
+\begin{lstlisting}
+def getTweets (n : Int, twitterAccountName: String):List[JsObject]= {
+
+  val prom = Promise[List[JsObject]]()
+
+  def loop(cpt:Int,
+           request:String,
+           acc:List[JsObject]):Future[List[JsObject]]={
+
+    cpt match {
+
+      case 0 => prom.success(acc).future
+      case _ => {
+
+        val requestSearchTweets: WSRequest = ws.url(
+          "https://api.twitter.com/1.1/search/tweets.json"
+          +request+"&tweet_mode=extended")
+
+        val complexRequestSearchTweets: WSRequest =
+          requestSearchTweets.addHttpHeaders("Authorization" -> headers )
+            .withRequestTimeout(10000.millis)
+
+        complexRequestSearchTweets.get().map( res => {
+
+          val tweets: String = res.body
+          val searchReponse: JsObject = Json.parse(tweets).as[JsObject]
+          val tweetsUser: JsObject = searchReponse("search_metadata").as[JsObject]
+          var nextResults: String = ""
+
+          if ((tweetsUser \ "next_results").isDefined) {
+            nextResults = tweetsUser("next_results").as[JsString].value
+          }
+
+          //No more next, need to stop here
+          if (nextResults=="") {
+            return loop(0, "", acc)
+          } else {
+            return loop(cpt - 1, nextResults, searchReponse :: acc)
+          }
+        })
+      }
+    }
+  }
+
+  val request : String = "?q="+twitterAccountName
+                              +"&count=100&result_type=recent&tweet_mode=extended"
+  loop(n,request,Nil)
+  Await.result(prom.future, Duration.Inf)
+}
+
+\end{lstlisting}
+
+
 
 

@@ -1,10 +1,16 @@
-Api Twitter toujours
+La fin d'un projet ne signifie pas que l'application est terminée, si l'on veut que celle-ci vive il faut toujours l'améliorer. En ce qui concerne la nôtre, les améliorations suivantes devraient être envisagée.
 
-La concurrence, lire la doc avant de dire nimp
+\paragraph{L'API de Twitter}
+Dans un premier temps, prendre un compte Entreprise qui permet une plus grande liberté pour les développeurs, lorsque ceci sera fait, il est bien probable qu'il faille également changer la récupérations des Tweets. 
 
-Meilleur système d'authentification -> voir les bonnes pratiques, bouncy castle fait le café en java, un équivalent scala ou inclusion de lib java?
+\paragraph{L'Optimisations}
+Il est toujours possibles d'optimiser un projet d'une manière ou d'une autre et le notre n'y fait pas exception, si l'on applique les précédent points et tout particulièrement le premier, à savoir un changement d'API, nous aurons un volume de données bien plus important, chaque seconde compte surtout sur le web ou une dizaine de seconde ressemble à une éternité. Ajouter Apache Spark, un framework open source de calcul distribué,au projet serait déjà un bon point dans ce sens.
 
-Optimisations, c'est toujours possibles. L'outil d'apache dont j'ai oublié le nom ?
+\paragraph{Est-ce que l'on viole la vie privée des employés ?}
+Lors de ce projet nous nous sommes surtout posé la question de savoir si l'on pouvait faire certaine chose avec l'API de Twitter au lieu de nous demander si l'on y avait le droit. Nous sommes parti du principe que Twitter ainsi que les Tweets qui sont dessus font partie du domaine publique. Mais est-ce réellement le cas ?
 
-Est-ce qu'on viole la vie privée des employé ?
+\newpage
+\paragraph{L'authentification}
+Comme nous avons pu le voir auparavant, notre système d'authentification n'est pas encore au point. L'idéal serait de le réparer ou même de le remplacer. En regardant les recommandation d'OWASP, on voit un framework qui se dégage du lot, \textbf{lift}. Bien évidemment, çela signifie qu'il faudrait abandonner Scala-Play et donc il faut bien mesurer les pour et les contres d'un tel changement et mesurer le temps nécessaire pour le faire.
 
+\includegraphics[width=\textwidth]{frameworks}

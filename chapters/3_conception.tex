@@ -57,13 +57,15 @@ Plus précisément, nous retrouvons les éléments suivants :
     \item \textbf{views} : Les vues HTML, offertes par notre serveur.
 \end{itemize}
 
+\newpage
+
 \subsection{Définition de la base de données}
 
 \subsubsection{Schéma de la base de données}
 En nous basant sur les données fournies par l'API de Twitter, nous avons construits nos modèles en ciblant la simplicité et la clarté.
 
-lancer le projet dans MySQL workbench et générer des Schéma et les commenter un peu plus.
-
+\includegraphics[width=\textwidth]{scala-project}
+Dans l'objectif d'avoir les données nécessaire pour récupérer les sentiments d'un Tweet nous avons besoin uniquement des tables ci-dessus. 
 
 \subsubsection{User}
 Cette table contient la liste des utilisateurs pouvant utiliser notre application. Chaque utilisateur est identifié par un email unique et possède un mot de passe ainsi qu'une date de création.
@@ -75,5 +77,5 @@ Chaque Tweets est défini par un id unique et possède un auteur, le texte du Twee
 \subsubsection{TweetResponse}
 Cette table contient la liste des réponses à un Tweets, leur texte sera utilisé dans l'analyse de sentiment. Un Tweets peut posséder entre une et plusieurs réponses et chaque réponses est lié à un et un seul Tweets.
 Tout comme les Tweets, les réponses possèdent un id, un auteur, un texte qui sera analysé, une date de création, une date d'analyse, et un ressentiment moyen.
-De la même manière qu'un Tweet peut intéresser une entreprise, les réponses aux Tweet d'autrui peuvent avoir un intérêt. 
+De la même manière qu'un Tweet peut intéresser une entreprise, les réponses aux Tweets d'autrui peuvent aussi avoir un intérêt. 
 

@@ -1,4 +1,10 @@
-Api twitter
+Notre projet est maintenant terminé et nous avons réspécté nos espérance. Toutefois, il reste quelque problème pour lesquels on aurait voulu avoir plus de temps afin de les corriger.
 
-Juste pour que vous le sachiez, on peut supprimer une analyse easy depuis postman sans ou avec le mauvaus token, je trouve aucun moyen de contourner ça , un if avant semble pas être pris en compte mais voila ça me soule de chercher plus
-C'est peut-être la logique qui est pété ou j'oublie de faire un check dieu sait (voilà pk des libs toutes faite c'est mieux hehe) dans le jwtUtility si jamais j'ai utilisé cette lib
+\paragraph{L'API de Twitter}
+Comme nous l'avons déjà dit auparavant, nous avons eu beaucoup de soucis avec celle-ci. Il faut savoir que pour utiliser l'API de Twitter il faut posséder un compte développeur afin de générer des tokens pour ses applications. Dans notre cas, nous avons pu profiter des accès d'un compte développer étudiant gratuit, cependant ceci n'est pas suffisant si l'on souhaite passer le projet en phase de production. En effet, les limitations sont telle que l'application serait complètement inutilisable.
+
+\paragraph{Garantie des résultats}
+Actuellement, il nous est impossible de garantir de pouvoir lister toutes les réponses d'un tweets. Ceci est lié aux limitations que l'on subit par l'API de Twitter. Nous avons essayé de faire en sorte de minimiser ce problème autant que possible.
+
+\paragraph{L'intégrité des données}
+Pour une raison que nous n'avons pas encore réussi à trouver, nous nous sommes rendu compte qu'il était possible, et ce relativement facilement, de supprimer une analyse de Tweet depuis postman par exemple n'ayant pas le bon token ou, pire encore, sans avoir besoin d'utiliser un token d'authentification. Il semblerait qu'une condition est ignorée ou pas prise en compte, ceci peut s'expliquer par une mauvaise gestion de la concurrence, une étape du processus de vérification qui a été oubliée ou mal exécutée, si l'on avait plus de temps pour le projet, ce problème serait le premier que l'on aurait essayé de résoudre.
